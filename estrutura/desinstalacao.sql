@@ -1,0 +1,2 @@
+drop table plugins.suspensaoorcamentaria;
+drop sequence plugins.suspensaoorcamentaria_sequencial_seq;

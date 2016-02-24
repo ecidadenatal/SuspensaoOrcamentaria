@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <plugin name="SuspensaoOrcamentaria" label="Suspensao Orcamentaria" plugin-version="1.0" ecidade-version="2.3.39" id-modulo="116">
+    <id id="SuspensaoOrcamentaria"> </id>
+    <files>
+      <file name="orc4_suspensaoorcamentaria001.php" path="/orc4_suspensaoorcamentaria001.php" />
+      <file name="orc4_suspensaoorcamentaria.RPC.php" path="/orc4_suspensaoorcamentaria.RPC.php" />
+      <!-- classe -->
+      <file name="db_suspensaoorcamentaria_classe.php"    path="/classes/db_suspensaoorcamentaria_classe.php" />
+      <!-- outro -->
+      <file name="SuspensaoOrcamentaria.xml"    path="/modification/xml/SuspensaoOrcamentaria.xml" />
+      <file name="plugins.suspensaoorcamentaria.dd.xml"    path="/dd/tabelas/plugins.suspensaoorcamentaria.dd.xml" />
+    </files>
+    <estrutura install="/instalacao.sql" uninstall="/desinstalacao.sql" >
+    </estrutura>
+    <menus> 
+       <menu type="4"> 
+         <item name="Suspensao Orcamentaria"  file="orc4_suspensaoorcamentaria001.php" liberado-cliente="true"/> 
+       </menu> 
+    </menus>
+  </plugin>
+</manifest>

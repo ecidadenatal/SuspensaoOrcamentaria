@@ -1,0 +1,18 @@
+Plugin: Suspensão Orçamentária
+
+Funcionalidades:
+Criada rotina para configurar e aplicar filtro de bloqueio na geração da autorização de empenho por Orgão, Unidade, Anexo e Fonte Recurso.
+O sistema irá bloquear a geração da autorização do empenho quando a dotacao escolhida no momento de gerar a autorização do empenho possuir uma estrutura bloqueada.
+ 
+Fontes Alterados:
+emp1_empautidot001.php
+emp4_liquidacao004.php
+forms/db_frmempautidot.php
+forms/db_frmliquida.php
+forms/db_frmliquidasemordem.php
+      
+Fontes Novos:
+orc4_suspensaoorcamentaria001.php
+orc4_suspensaoorcamentaria.RPC.php
+/classes/db_suspensaoorcamentaria_classe.php
+
