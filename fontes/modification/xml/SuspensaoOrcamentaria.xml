@@ -167,22 +167,24 @@
         $sSqlBuscaMovimento = $oDaoEmpageMov->sql_query_file(null, "*", null, "e81_codmov = {$iCodMov}");
         $rsBuscaMovimento   = $oDaoEmpageMov->sql_record($sSqlBuscaMovimento);
         $sNumEmp = db_utils::fieldsMemory($rsBuscaMovimento, 0)->e81_numemp;
-        //empempenho para pegar o coddot
-        $oDaoEmpempenho = db_utils::getDao('empempenho');
-        $sSqlBuscaEmpenho = $oDaoEmpempenho->sql_query_file(null, "*", null, "e60_numemp = {$sNumEmp}");
-        $rsBuscaEmpenho   = $oDaoEmpempenho->sql_record($sSqlBuscaEmpenho);
-        $sCodDot = db_utils::fieldsMemory($rsBuscaEmpenho, 0)->e60_coddot;
-        $sCodEmp = db_utils::fieldsMemory($rsBuscaEmpenho, 0)->e60_codemp;
-        //pega o status da suspensão com o coddot
-        $oDaoSuspensaoOrcamentaria = db_utils::getDao("suspensaoorcamentaria");
-        $rsValidaSuspensaoOrcamentaria = $oDaoSuspensaoOrcamentaria->buscaSuspensaoDotacao($sCodDot, db_getsession("DB_anousu"));
-        if ( $oDaoSuspensaoOrcamentaria->numrows > 0 ) {
-           $lSuspenderPagamento = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->suspenderpagamento;
-           $sAnexo = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->localizadorgastos;
-           $sFonte = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->recurso;                                     
-        }
-        if ($lSuspenderPagamento == 't') {
-           throw new Exception("Não foi possível realizar as configurações do pagamento referente ao empenho {$sCodEmp}. Ficha financeira do Anexo {$sAnexo} e Fonte de Recurso {$sFonte} suspensa para pagamentos.");
+        //empempenho para pegar o coddot (se não tiver numemp, não é pagamento, portanto não precisa ser verificado)
+        if ($sNumEmp != "0") {
+          $oDaoEmpempenho = db_utils::getDao('empempenho');
+          $sSqlBuscaEmpenho = $oDaoEmpempenho->sql_query_file(null, "*", null, "e60_numemp = {$sNumEmp}");
+          $rsBuscaEmpenho   = $oDaoEmpempenho->sql_record($sSqlBuscaEmpenho);
+          $sCodDot = db_utils::fieldsMemory($rsBuscaEmpenho, 0)->e60_coddot;
+          $sCodEmp = db_utils::fieldsMemory($rsBuscaEmpenho, 0)->e60_codemp;
+          //pega o status da suspensão com o coddot
+          $oDaoSuspensaoOrcamentaria = db_utils::getDao("suspensaoorcamentaria");
+          $rsValidaSuspensaoOrcamentaria = $oDaoSuspensaoOrcamentaria->buscaSuspensaoDotacao($sCodDot, db_getsession("DB_anousu"));
+          if ( $oDaoSuspensaoOrcamentaria->numrows > 0 ) {
+             $lSuspenderPagamento = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->suspenderpagamento;
+             $sAnexo = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->localizadorgastos;
+             $sFonte = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->recurso;                                     
+          }
+          if ($lSuspenderPagamento == 't') {
+             throw new Exception("Não foi possível realizar as configurações do pagamento referente ao empenho {$sCodEmp}. Ficha financeira do Anexo {$sAnexo} e Fonte de Recurso {$sFonte} suspensa para pagamentos.");
+          }
         }]]>
       </add>
     </operation>
