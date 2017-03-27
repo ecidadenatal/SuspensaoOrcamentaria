@@ -5,10 +5,11 @@
   <ecidade-version>2.3.39</ecidade-version>
   <file path='forms/db_frmempautidot.php'>
     <operation>
-      <search><![CDATA[/* [Inicio plugin suspensaoOrcamentaria] */]]></search>
-      <add position="after">
-        <![CDATA[
+      <search regex="true"><![CDATA[(\$db_opcao_item\s*=\s*1\s*;)]]></search>
+      <add>
+        <![CDATA[$1
         
+        /* [Inicio plugin suspensaoOrcamentaria] */
         if (isset($o47_coddot) && $o47_coddot != "") {
     
            $oDaoSuspensaoOrcamentaria = db_utils::getDao("suspensaoorcamentaria");
@@ -20,27 +21,20 @@
                 unset($o47_coddot);             
               }                                                                                
            }                                                                                                                             
-        }   
+        }
+        /* [Fim plugin suspensaoOrcamentaria] */   
         
           ]]>
       </add>
     </operation>
   </file>
 
-  <file path='emp1_empautidot001.php'>
-    <operation>
-      <search><![CDATA[include("forms/db_frmempautidot.php");]]></search>
-      <add position="replace">
-        <![CDATA[include(Modification::getFile("forms/db_frmempautidot.php"));]]>
-      </add>
-    </operation>
-  </file>
-  
   <file path='emp4_liquidacao004.php'>
     <operation>
-      <search><![CDATA[/* [Inicio plugin suspensaoOrcamentaria - Parte1] */]]></search>
-      <add position="after">
+      <search regex="true"><![CDATA[(if\s*\(\s*count\(\$aNotasEmpenho\)\s*>\s*0\s*&&\s*\$lValidaNotasEmpenho.*\)\s*{)]]></search>
+      <add>
         <![CDATA[
+      /* [Inicio plugin suspensaoOrcamentaria] */
       $lSuspenderLiquidacao = false;
       if ($objJson->operacao == 1) {
         $sSqlDadosDotacaoEmpenho = "select e60_coddot 
@@ -53,171 +47,152 @@
            $lSuspenderLiquidacao = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->suspenderliquidacao;                                                                              
         }
       }
+      /* [Fim plugin suspensaoOrcamentaria] */
         
-    ]]>
+    $1]]>
       </add>
     </operation>
 
     <operation>
-      <search><![CDATA[/* [Inicio plugin suspensaoOrcamentaria - Parte2] */]]></search>
-      <add position="after">
-        <![CDATA[
-         $oEmpenho->lSuspenderLiquidacao = $lSuspenderLiquidacao;
+      <search regex="true" limit="4"><![CDATA[(\$oEmpenho->lPossuiIntegracaoPatrimonial\s*=\s*\$lPossuiIntegracaoPatrimonial\s*;)]]></search>
+      <add>
+        <![CDATA[$1
+      /* [Inicio plugin suspensaoOrcamentaria] */
+      $oEmpenho->lSuspenderLiquidacao = $lSuspenderLiquidacao;
+      /* [Fim plugin suspensaoOrcamentaria] */
+      
          ]]>
       </add>
     </operation>
-
-    <operation>
-      <search><![CDATA[/* [Inicio plugin suspensaoOrcamentaria - Parte3] */]]></search>
-      <add position="after">
-        <![CDATA[
-        $oEmpenho->lSuspenderLiquidacao = $lSuspenderLiquidacao;
-        ]]>
-      </add>
-    </operation>
-
-    <operation>
-      <search><![CDATA[/* [Inicio plugin suspensaoOrcamentaria - Parte4] */]]></search>
-      <add position="after">
-        <![CDATA[
-        $oEmpenho->lSuspenderLiquidacao = $lSuspenderLiquidacao;
-        ]]>
-      </add>
-    </operation>
-
-    <operation>
-      <search><![CDATA[/* [Inicio plugin suspensaoOrcamentaria - Parte5] */]]></search>
-      <add position="after">
-        <![CDATA[
-        $oEmpenho->lSuspenderLiquidacao = $lSuspenderLiquidacao;
-        ]]>
-      </add>
-    </operation>
-
   </file>
 
   <file path='forms/db_frmliquida.php'>
     <operation>
-      <search><![CDATA[/* [Inicio plugin suspensaoOrcamentaria - Parte1] */]]></search>
-      <add position="after">
+      <search regex="true"><![CDATA[(if\s*\(obj.numnotas\s*>\s*0\)\s*{)]]></search>
+      <add>
         <![CDATA[
-      if (obj.lSuspenderLiquidacao == 't') {
-        alert("Ficha financeira suspensa para liquidações.");
-        js_pesquisa('');
-        return false;
-      }
-    ]]>
+    /* [Inicio plugin suspensaoOrcamentaria] */
+    if (obj.lSuspenderLiquidacao == 't') {
+      alert("Ficha financeira suspensa para liquidações.");
+      js_pesquisa('');
+      return false;
+    }
+    /* [Fim plugin suspensaoOrcamentaria] */
+    
+    $1]]>
       </add>
     </operation>
   </file>
 
   <file path='forms/db_frmliquidasemordem.php'>
     <operation>
-      <search><![CDATA[/* [Inicio plugin suspensaoOrcamentaria - Parte1] */]]></search>
-      <add position="after">
+      <search regex="true"><![CDATA[(if\s*\(typeof\s*obj.lAnteriorImplantacaoDepreciacao\s*===\s*"undefined"\s*\)\s*{)]]></search>
+      <add>
         <![CDATA[
-      if (obj.lSuspenderLiquidacao == 't') {
-        alert("Ficha financeira suspensa para liquidações.");
-        js_pesquisa();
-        return false;
-      }
-    ]]>
+    /* [Inicio plugin suspensaoOrcamentaria] */
+    if (obj.lSuspenderLiquidacao == 't') {
+      alert("Ficha financeira suspensa para liquidações.");
+      js_pesquisa();
+      return false;
+    }
+    /* [Fim plugin suspensaoOrcamentaria] */
+    
+    $1]]>
       </add>
     </operation>
   </file>
 
   <file path='libs/db_liborcamento.php'>
     <operation>
-      <search><![CDATA[$dotacoes = " select fc_estruturaldotacao(o58_anousu,o58_coddot) as o50_estrutdespesa,]]></search>
-      <add position="after">
-        <![CDATA[
-        o58_localizadorgastos as dl_anx,    ]]>
-      </add>
-    </operation>
-  </file>
-
-  <file path='func_permorcdotacao.php'>
-    <operation>
-      <search><![CDATA[require_once("libs/db_liborcamento.php");]]></search>
-      <add position="replace">
-        <![CDATA[
-        require_once(modification("libs/db_liborcamento.php"));]]>
-      </add>
-    </operation>
-  </file>
-
-  <file path='emp4_estornaliquidacao001.php'>
-    <operation>
-      <search><![CDATA[require_once("libs/db_liborcamento.php");]]></search>
-      <add position="replace">
-        <![CDATA[
-        require_once(modification("libs/db_liborcamento.php"));]]>
+      <search regex="true"><![CDATA[(\$.*\s*=\s*"\s*select\s*fc_estruturaldotacao\(\s*o58_anousu\s*,\s*o58_coddot\s*\)\s*as\s*o50_estrutdespesa\s*,)]]></search>
+      <add>
+        <![CDATA[$1 
+        o58_localizadorgastos as dl_anx,]]>
       </add>
     </operation>
   </file>
 
   <file path='emp4_manutencaoPagamentoRPC.php'>
     <operation>
-      <search><![CDATA[/* [Inicio plugin suspensaoOrcamentaria - Parte1] */]]></search>
-      <add position="after">
-        <![CDATA[
+      <search regex="true"><![CDATA[(\$rsBuscaConfiguracaoMovimento\s*=.*\);)]]></search>
+      <add>
+        <![CDATA[$1
+        
+        /* [Inicio plugin suspensaoOrcamentaria] */
         $lSuspenderPagamento = false;
+        
         //empagemov para pegar o numemp
         $oDaoEmpageMov = db_utils::getDao('empagemov');
         $sSqlBuscaMovimento = $oDaoEmpageMov->sql_query_file(null, "*", null, "e81_codmov = {$iCodMov}");
         $rsBuscaMovimento   = $oDaoEmpageMov->sql_record($sSqlBuscaMovimento);
-        $sNumEmp = db_utils::fieldsMemory($rsBuscaMovimento, 0)->e81_numemp;
-        //empempenho para pegar o coddot (se não tiver numemp, não é pagamento, portanto não precisa ser verificado)
+        $iNumEmp = db_utils::fieldsMemory($rsBuscaMovimento, 0)->e81_numemp;
+        
+        //empempenho para pegar o coddot
         if ($sNumEmp != "0") {
           $oDaoEmpempenho = db_utils::getDao('empempenho');
-          $sSqlBuscaEmpenho = $oDaoEmpempenho->sql_query_file(null, "*", null, "e60_numemp = {$sNumEmp}");
+          $sSqlBuscaEmpenho = $oDaoEmpempenho->sql_query_file(null, "*", null, "e60_numemp = {$iNumEmp}");
           $rsBuscaEmpenho   = $oDaoEmpempenho->sql_record($sSqlBuscaEmpenho);
-          $sCodDot = db_utils::fieldsMemory($rsBuscaEmpenho, 0)->e60_coddot;
+          $iCodDot = db_utils::fieldsMemory($rsBuscaEmpenho, 0)->e60_coddot;
           $sCodEmp = db_utils::fieldsMemory($rsBuscaEmpenho, 0)->e60_codemp;
+          
           //pega o status da suspensão com o coddot
           $oDaoSuspensaoOrcamentaria = db_utils::getDao("suspensaoorcamentaria");
-          $rsValidaSuspensaoOrcamentaria = $oDaoSuspensaoOrcamentaria->buscaSuspensaoDotacao($sCodDot, db_getsession("DB_anousu"));
+          $rsValidaSuspensaoOrcamentaria = $oDaoSuspensaoOrcamentaria->buscaSuspensaoDotacao($iCodDot, db_getsession("DB_anousu"));
           if ( $oDaoSuspensaoOrcamentaria->numrows > 0 ) {
              $lSuspenderPagamento = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->suspenderpagamento;
-             $sAnexo = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->localizadorgastos;
-             $sFonte = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->recurso;                                     
+             $iAnexo = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->localizadorgastos;
+             $iFonte = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->recurso;                                     
           }
+          
           if ($lSuspenderPagamento == 't') {
-             throw new Exception("Não foi possível realizar as configurações do pagamento referente ao empenho {$sCodEmp}. Ficha financeira do Anexo {$sAnexo} e Fonte de Recurso {$sFonte} suspensa para pagamentos.");
+             throw new Exception("Não foi possível realizar as configurações do pagamento referente ao empenho {$sCodEmp}. Ficha financeira do Anexo {$iAnexo} e Fonte de Recurso {$iFonte} suspensa para pagamentos.");
           }
-        }]]>
+          
+        }
+        /* [Fim plugin suspensaoOrcamentaria] */
+]]>
       </add>
     </operation>
 
     <operation>
-      <search><![CDATA[/* [Inicio plugin suspensaoOrcamentaria - Parte2] */]]></search>
-      <add position="after">
+      <search regex="true"><![CDATA[(\$oRetorno->iCodigoOrdemAuxiliar\s*=\s*\$iCodigoOrdemAuxiliar;)]]></search>
+      <add>
         <![CDATA[
+      /* [Inicio plugin suspensaoOrcamentaria] */
       $oRetorno->lSuspenderPagamento = $lSuspenderPagamento;
       $oRetorno->sCodEmp = $sCodEmp;
-      $oRetorno->sAnexo  = $sAnexo;
-      $oRetorno->sFonte  = $sFonte;]]>
+      $oRetorno->sAnexo  = $iAnexo;
+      $oRetorno->sFonte  = $iFonte;
+      /* [Fim plugin suspensaoOrcamentaria] */
+        
+      $1]]>
       </add>
     </operation>
   </file>
 
   <file path='emp4_pagarpagamentoRPC.php'>
     <operation>
-      <search><![CDATA[/* [Inicio plugin suspensaoOrcamentaria - Parte1] */]]></search>
-      <add position="after">
-        <![CDATA[
+      <search regex="true"><![CDATA[(\$oOrdemPagamento\s*=\s*new\s*ordemPagamento\s*\(\s*\$oMovimento->iNotaLiq\s*\)\s*;)]]></search>
+      <add>
+        <![CDATA[$1
+        
+          /* [Inicio plugin suspensaoOrcamentaria] */
           $lSuspenderPagamento = false;
+          
           $rsOrdemPagamento = $oOrdemPagamento->getDadosOrdem();
           $oDaoSuspensaoOrcamentaria = db_utils::getDao("suspensaoorcamentaria");
           $rsValidaSuspensaoOrcamentaria = $oDaoSuspensaoOrcamentaria->buscaSuspensaoDotacao($rsOrdemPagamento->e60_coddot, db_getsession("DB_anousu"));
           if ( $oDaoSuspensaoOrcamentaria->numrows > 0 ) {
              $lSuspenderPagamento = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->suspenderpagamento; 
-             $sAnexo = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->localizadorgastos; 
-             $sFonte = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->recurso; 
+             $iAnexo = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->localizadorgastos; 
+             $iFonte = db_utils::fieldsMemory($rsValidaSuspensaoOrcamentaria, 0)->recurso; 
           }
           if ($lSuspenderPagamento == 't') {
-             throw new Exception("Não foi possível realizar o pagamento do movimento {$oMovimento->iCodMov}. Ficha financeira do Anexo {$sAnexo} e Fonte de Recurso {$sFonte} suspensa para pagamentos.");
-          }]]>
+             throw new Exception("Não foi possível realizar o pagamento do movimento {$oMovimento->iCodMov}. Ficha financeira do Anexo {$iAnexo} e Fonte de Recurso {$iFonte} suspensa para pagamentos.");
+          }
+          /* [Fim plugin suspensaoOrcamentaria] */
+          
+          ]]>
       </add>
     </operation>
   </file>
